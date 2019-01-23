@@ -1,5 +1,8 @@
 package com.example.android.weatherapp
 
+/*Interface for getting forecast from site
+* Need to test it and implement it*/
+
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -14,7 +17,7 @@ interface WeatherInterface {
                 .baseUrl("http://api.openweathermap.org/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-            retrofit.create<WeatherInterface>(WeatherInterface::class.java)
+            retrofit.create(WeatherInterface::class.java)
         }
     }
 }

@@ -1,4 +1,4 @@
-package repository
+/*package repository
 
 import com.example.android.weatherapp.WeatherForecast
 import com.example.android.weatherapp.WeatherInterface
@@ -22,4 +22,4 @@ class WeatherRepo(var weatherInterface: WeatherInterface) {
             }
         })
     }
-}
+}*/

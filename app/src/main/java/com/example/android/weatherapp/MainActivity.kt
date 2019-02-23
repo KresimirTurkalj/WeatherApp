@@ -43,7 +43,11 @@ class MainActivity : AppCompatActivity(), PlaceSelectionListener {
     override fun onPlaceSelected(p0: Place?) {
         currentLatLng = p0?.latLng ?: null
         if (currentLatLng != null) {
-
+            Toast.makeText(
+                this,
+                "Lat: ${currentLatLng!!.latitude}, Lon: ${currentLatLng!!.longitude}",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
@@ -54,6 +58,13 @@ class MainActivity : AppCompatActivity(), PlaceSelectionListener {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_LOCATION && resultCode == Activity.RESULT_OK) {
             currentLatLng = data!!.getParcelableExtra(KEY_LOCATION)
+        }
+        if (currentLatLng != null) {
+            Toast.makeText(
+                this,
+                "Lat: ${currentLatLng!!.latitude}, Lon: ${currentLatLng!!.longitude}",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 }

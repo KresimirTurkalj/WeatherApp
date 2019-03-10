@@ -1,7 +1,7 @@
 package com.example.android.weatherapp
 
-/*Interface for getting forecast from site
-* Need to test it and implement it*/
+/**Interface for getting forecast from site
+ * Need to test it and implement it*/
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

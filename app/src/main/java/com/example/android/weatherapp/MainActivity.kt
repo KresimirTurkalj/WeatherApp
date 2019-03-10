@@ -6,20 +6,23 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.google.android.gms.common.api.Status
-import com.google.android.gms.location.places.Place
-import com.google.android.gms.location.places.ui.PlaceSelectionListener
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import kotlinx.android.synthetic.main.activity_main.*
 
-/**Main Activity that contains refresh button, map button and PlaceAutoComplete fragment
-* Still need to figure out where to place a simple that adds current location and how to place button for Activity that holds info*/
 
-class MainActivity : AppCompatActivity(), PlaceSelectionListener {
+/**Main Activity that contains refresh button, map button and PlaceAutoComplete fragment
+ * Still need to figure out where to place a simple button that adds current location
+ * and how to place button for Activity that holds info*/
+
+class MainActivity : AppCompatActivity() {
 
     companion object {
         const val REQUEST_LOCATION = 1
         const val KEY_LOCATION = "location"
-        const val appID = "0181146439344a1454045d8664f81fcf"
     }
 
     private var currentLatLng: LatLng? = null
@@ -28,7 +31,26 @@ class MainActivity : AppCompatActivity(), PlaceSelectionListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        Places.initialize(applicationContext, getString(R.string.apiKey))
+        val autocompleteFragment =
+            supportFragmentManager.findFragmentById(R.id.autocomplete_fragment) as AutocompleteSupportFragment
+        autocompleteFragment.setPlaceFields(arrayListOf(Place.Field.LAT_LNG))
+        autocompleteFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
+            override fun onPlaceSelected(p0: Place) {
+                currentLatLng = p0.latLng
+                if (currentLatLng != null) {
+                    Toast.makeText(
+                        baseContext,
+                        "Lat: ${currentLatLng!!.latitude}, Lon: ${currentLatLng!!.longitude}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
 
+            override fun onError(p0: Status) {
+                Toast.makeText(baseContext, "Place error", Toast.LENGTH_LONG).show()
+            }
+        })
 
         map_button.setOnClickListener {
             val mapIntent = Intent(this, MapsActivity::class.java)
@@ -40,20 +62,6 @@ class MainActivity : AppCompatActivity(), PlaceSelectionListener {
         }
     }
 
-    override fun onPlaceSelected(p0: Place?) {
-        currentLatLng = p0?.latLng ?: null
-        if (currentLatLng != null) {
-            Toast.makeText(
-                this,
-                "Lat: ${currentLatLng!!.latitude}, Lon: ${currentLatLng!!.longitude}",
-                Toast.LENGTH_LONG
-            ).show()
-        }
-    }
-
-    override fun onError(p0: Status?) {
-        Toast.makeText(this, "Place error", Toast.LENGTH_LONG).show()
-    }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_LOCATION && resultCode == Activity.RESULT_OK) {
@@ -61,9 +69,7 @@ class MainActivity : AppCompatActivity(), PlaceSelectionListener {
         }
         if (currentLatLng != null) {
             Toast.makeText(
-                this,
-                "Lat: ${currentLatLng!!.latitude}, Lon: ${currentLatLng!!.longitude}",
-                Toast.LENGTH_LONG
+                this, "Lat: ${currentLatLng!!.latitude}, Lon: ${currentLatLng!!.longitude}", Toast.LENGTH_LONG
             ).show()
         }
     }
